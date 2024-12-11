@@ -3,4 +3,4 @@
 	url = git@github.com:PegasusResearch/pegasus_gazebo.git
 [submodule "pegasus"]
 	path = pegasus
-	url = git@github.com:PegasusResearch/pegasus.git
+	url = git@github.com:rodrigofpgomes/pegasus.git
