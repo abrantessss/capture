@@ -1,0 +1,32 @@
+<?xml version='1.0'?>
+<sdf version='1.6'>
+  <model name='seixal_track'>
+    <static>true</static>
+    <link name="seixal_track_link">
+
+      <!-- Generate the collision models based on the DAE file walls of the arena -->
+      <collision name="seixal_track_collision">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://seixal_track/meshes/Seixal.dae</uri>
+              <scale>1.0 1.0 1.0</scale>
+            </mesh>
+          </geometry>
+        </collision>
+      
+      <!-- Generate the visual gazebo meshes for the arena based also on the DAE file -->
+      <visual name="seixal_track_visual">
+        <!-- Do not use shadows -->
+        <cast_shadows>false</cast_shadows>
+        <pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+        <geometry>
+          <mesh>
+            <uri>model://seixal_track/meshes/Seixal.dae</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+  </model>
+</sdf>
