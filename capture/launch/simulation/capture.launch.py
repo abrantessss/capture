@@ -7,68 +7,87 @@ from launch.substitutions import LaunchConfiguration
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 
+from launch_ros.actions import Node
+
 def generate_launch_description():
     
     # ----------------------------------------
-    # ---- DECLARE THE LAUNCH ARGUMENTS ------
+    # ----------- SIMULATOR LAUNCH -----------
     # ----------------------------------------
 
-    # Namespace and ID of the vehicle as parameter received by the launch file
-    id_arg = DeclareLaunchArgument('vehicle_id', default_value='1', description='Drone ID in the network')
-    namespace_arg = DeclareLaunchArgument('vehicle_ns', default_value='drone', description='Namespace to append to every topic and node name')
-    
-    # Define the drone MAVLINK IP and PORT
-    mav_connection_arg = DeclareLaunchArgument('connection', default_value='udp://:14540', description='The interface used to connect to the vehicle')
-    
-    # Define the drone MAVLINK forward ips and ports (by default in simulation we do not need to forward mavlink connections)
-    mavlink_forward_arg = DeclareLaunchArgument('mavlink_forward', default_value="['']", description='A list of ips where to forward mavlink messages')
-
-    # Define which file to use for the drone parameters
-    drone_params_file_arg = DeclareLaunchArgument(
-        'drone_params', 
-        default_value=os.path.join(get_package_share_directory('capture'), 'config', 'capture.yaml'),
-        description='The directory where the drone parameters such as mass, thrust curve, etc. are defined')
-    
-    # ----------------------------------------
-    # ---- DECLARE THE NODES TO LAUNCH -------
-    # ----------------------------------------
-    
-    # Call MAVLINK interface package launch file 
-    mavlink_interface_launch_file = IncludeLaunchDescription(
-        # Grab the launch file for the mavlink interface
-        PythonLaunchDescriptionSource(os.path.join(get_package_share_directory('mavlink_interface'), 'launch/mavlink_interface.launch.py')),
-        # Define costume launch arguments/parameters used for the mavlink interface
+    #Launch seixal world in gazebo
+    gazebo_launch_file = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(get_package_share_directory('capture_gazebo'), 'launch/worlds/seixal.launch.py')),
         launch_arguments={
-            'id': LaunchConfiguration('vehicle_id'), 
-            'namespace': LaunchConfiguration('vehicle_ns'),
+            'gui':'true',
+        }.items()
+    )
+
+    capture_launch_file = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(get_package_share_directory('capture_gazebo'), 'launch/vehicles/capture.launch.py')),
+        launch_arguments={ #ENU coordinates
+            'x': '-0.999935',
+            'y': '4.481597',
+            'z': '7.5',
+            'launch_pegasus': 'false',
+            'vehicle_id': '1',
+        }.items()
+    )
+
+    # ----------------------------------------
+    # -------- CONTROL SYSTEM LAUNCH ---------
+    # ----------------------------------------
+
+    #Define which file to use for the drone parameters
+    drone_params_file_arg = DeclareLaunchArgument(
+        'drone_params',
+        default_value=os.path.join(get_package_share_directory('capture'), 'config', 'capture.yaml'),
+        description='The directory where the drone parameters such as mass, thrust curve, etc. are defined'
+    )
+
+    #Call MAVLINK interface package launch file
+    mavlink_interface_launch_file = IncludeLaunchDescription(
+        #Grab the launch file for the mavlink interface
+        PythonLaunchDescriptionSource(os.path.join(get_package_share_directory('mavlink_interface'), 'launch/mavlink_interface.launch.py')),
+        #Define costume launch arguments/parameters used for the mavlink interface
+        launch_arguments={
+            'vehicle_id': '1',
+            'namespace': 'drone',
             'drone_params': LaunchConfiguration('drone_params'),
-            'connection': LaunchConfiguration('connection'),
-            'mavlink_forward': LaunchConfiguration('mavlink_forward')
+            'connection': 'udp://:14540',
+            'mavlink_forward': "['']"
         }.items(),
     )
 
-    # Call autopilot package launch file
+    #Call autopilot package launch file
     autopilot_launch_file = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(get_package_share_directory('autopilot'), 'launch/autopilot.launch.py')),
-        # Define costume launch arguments/parameters used 
+        #Define costume launch arguments/parameters used
         launch_arguments={
-            'id': LaunchConfiguration('vehicle_id'),
-            'namespace': LaunchConfiguration('vehicle_ns'),
+            'vehicle_id': '1',
+            'namespace': 'drone',
             'autopilot_yaml': LaunchConfiguration('drone_params'),
-        }.items(),
+        }.items()
     )
-
+    
+    extend_claw_node = Node(
+        package='capture_claw',        
+        executable='extend_claw_py',   
+        namespace='drone1',      
+        name='extend_claw_py',         
+        output='screen'
+    )
+    
     # ----------------------------------------
     # ---- RETURN THE LAUNCH DESCRIPTION -----
     # ----------------------------------------
     return LaunchDescription([
-        # Launch arguments
-        id_arg, 
-        namespace_arg, 
-        mav_connection_arg,
-        mavlink_forward_arg,
+        #Launch files for simulation
+        gazebo_launch_file,
+        capture_launch_file,
+        #Launch files for the control system
         drone_params_file_arg,
-        # Launch files
         mavlink_interface_launch_file,
-        autopilot_launch_file
+        autopilot_launch_file,
+        extend_claw_node,
     ])

@@ -25,12 +25,12 @@ def launch_vehicle(context, *args, **kwargs):
 
     # Get the environment variables
     environment = os.environ
-    environment["PX4_SIM_MODEL"] = 'gazebo-classic_iris'
+    environment["PX4_SIM_MODEL"] = 'gazebo-classic_pegasus_capture'
     environment["ROS_VERSION"] = '2'
 
     # Get the PX4-gazebo directory
     px4_gazebo_dir = os.path.join(PX4_DIR, 'Tools/simulation/gazebo-classic/sitl_gazebo-classic')
-    pegasus_models_dir = get_package_share_directory('pegasus_gazebo')
+    pegasus_models_dir = get_package_share_directory('capture_gazebo')
     
     # Get the standard iris drone models inside the PX4 package
     model = os.path.join(pegasus_models_dir, 'models', vehicle_model, vehicle_model + '.sdf')
@@ -72,13 +72,13 @@ def launch_vehicle(context, *args, **kwargs):
     # Launch PX4 simulator
     px4_sitl_process = ExecuteProcess(
         cmd=[
+            'bash', '-c',
             PX4_DIR + '/build/px4_sitl_default/bin/px4',
             PX4_DIR + '/ROMFS/px4fmu_common/',
             '-s',
             PX4_DIR + '/ROMFS/px4fmu_common/init.d-posix/rcS',
             '-i ' + str(port_increment)
         ],
-        prefix='bash -c "$0 $@"',
         cwd=PX4_RUN_DIR,
         output='screen',
         env=environment,
@@ -88,7 +88,7 @@ def launch_vehicle(context, *args, **kwargs):
     # Launch the pegasus control and navigation code stack
     pegasus_launch = IncludeLaunchDescription(
         # Grab the launch file for the mavlink interface
-        PythonLaunchDescriptionSource(os.path.join(get_package_share_directory('pegasus'), 'launch/simulation/capture.launch.py')),
+        PythonLaunchDescriptionSource(os.path.join(get_package_share_directory('capture'), 'launch/simulation/capture.launch.py')),
         # Define costume launch arguments/parameters used for the mavlink interface
         launch_arguments={
             'id': str(vehicle_id), 
@@ -149,9 +149,9 @@ def generate_launch_description():
         # TODO - receive coordinates in ned perform the conversion to ENU and f.l.u here
         # so that the user only needs to work in NED coordinates
         DeclareLaunchArgument('vehicle_id', default_value='1', description='Drone ID in the network'),
-        DeclareLaunchArgument('x', default_value='0', description='X position expressed in ENU'),#-0.999935
-        DeclareLaunchArgument('y', default_value='0', description='Y position expressed in ENU'), #4.481597
-        DeclareLaunchArgument('z', default_value='10 ', description='Z position expressed in ENU'),        #8
+        DeclareLaunchArgument('x', default_value='-0.999935', description='X position expressed in ENU'),
+        DeclareLaunchArgument('y', default_value='4.481597', description='Y position expressed in ENU'),
+        DeclareLaunchArgument('z', default_value='8 ', description='Z position expressed in ENU'),       
         DeclareLaunchArgument('R', default_value='0.0', description='Roll orientation expressed in ENU'),
         DeclareLaunchArgument('P', default_value='0.0', description='Pitch orientation expressed in ENU'),
         DeclareLaunchArgument('Y', default_value='0.0', description='Yaw orientation expressed in ENU'),

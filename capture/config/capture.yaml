@@ -4,19 +4,19 @@
     # Low-level configurations
     # ----------------------------------------------------------------------------------------------------------
     dynamics:
-      mass: 1.500 #Kg
+      mass: 3.50 #Kg
       thrust_curve:
-        # Formula T(N) = a * input^2 + b*input + c
-        # with input = [0.0, 1.0], hence we need to scale by 100.0
-        identifier: 'Quadratic'
-        parameter_names: ["a", "b", "c", "scale"]
-        parameters: [34.03, 7.151, -0.012, 100.0]
+        # Formula T(N) = a * arctan(b * input + c) + d   
+        # with input = [0.0, 100.0]
+        identifier: 'Arctan'
+        parameter_names: ["a", "b", "c", "d"]
+        parameters: [18.96362, 0.02335, -0.85863, 13.28857]    # DShot600 configuration
     # ----------------------------------------------------------------------------------------------------------
     # Autopilot configurations
     # ----------------------------------------------------------------------------------------------------------
     autopilot:
       # Update rate
-      rate: 33.0 # Hz
+      rate: 50.0 # Hz
       # ----------------------------------------------------------------------------------------------------------
       # Definition of the controller that will perform the tracking of references of the different operation modes
       # ----------------------------------------------------------------------------------------------------------
@@ -30,30 +30,6 @@
           control_inertial_acceleration: "fmu/in/inertial_acceleration"
           control_attitude: "fmu/in/force/attitude"
           control_attitude_rate: "fmu/in/force/attitude_rate"
-      PIDController:
-        publishers:
-          control_attitude: "fmu/in/force/attitude"
-          control_attitude_rate: "fmu/in/force/attitude_rate"
-          pid_debug_topic: "autopilot/statistics/pid"
-        # Gains for position PIDs on [x, y, z]
-        gains:
-          kp: [8.0, 8.0, 8.0]   # Proportional gain
-          kd: [3.0, 3.0, 3.0]   # Derivative gain
-          ki: [0.2, 0.2, 0.1]   # Integral gain
-          min_output: [-20.0, -20.0, -20.0] # Minimum output of each PID
-          max_output: [ 20.0,  20.0,  20.0]
-      MellingerController:
-        publishers:
-          control_attitude: "fmu/in/force/attitude"
-          control_attitude_rate: "fmu/in/force/attitude_rate"
-          debug_topic: "autopilot/statistics/mellinger"
-        gains:
-          kp: [5.0, 5.0, 3.3]    # Proportional gain
-          kd: [4.0, 4.0, 5.0]    # Derivative gain
-          ki: [0.0, 0.0, 0.0]    # Integral gain
-          kr: [6.5, 6.5, 6.5]    # Attitude error gain
-          min_output: [-100.0, -100.0, -100.0]  # Minimum output of each PID
-          max_output: [ 100.0,  100.0,  100.0]  # Maximum output of each PID
       # ----------------------------------------------------------------------------------------------------------
       # Definition of the geofencing mechanism that will keep the vehicle in safe places
       # ----------------------------------------------------------------------------------------------------------
@@ -106,7 +82,7 @@
         fallback: "HoldMode"
         on_finish: "HoldMode"
         geofencing_violation_fallback: "HoldMode"
-        takeoff_altitude: -1.0 # m (NED)
+        takeoff_altitude: -2.0 # m (NED)
         set_takeoff_altitude_service: "autopilot/set_takeoff"
       LandMode: 
         valid_transitions: ["DisarmMode", "ArmMode", "TakeoffMode", "HoldMode", "WaypointMode", "FollowTrajectoryMode", "PassThroughMode"]
@@ -149,3 +125,14 @@
         constants: "fmu/constants"
       services:
         set_mode: "autopilot/change_mode"
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    claw_joint_position_controller:
+      type: position_controllers/JointPositionController
+      joint: claw_joint
+      pid:
+        p: 100.0
+        i: 0.0
+        d: 0.0
+      command_interface: position

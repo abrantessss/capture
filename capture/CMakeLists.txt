@@ -45,7 +45,7 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ##################################################################################
 cmake_minimum_required(VERSION 3.10.2)
-project(pegasus)
+project(capture)
 
 # Add -Wno-dev to CLion CMake options to suppress warning about gazebo_dev
 find_package(ament_cmake_auto REQUIRED)
