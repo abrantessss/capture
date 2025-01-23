@@ -119,20 +119,10 @@
         control_attitude: "fmu/in/force/attitude"
         control_attitude_rate: "fmu/in/force/attitude_rate"
         status: "autopilot/status"
+        control_claw_position: "claw_joint_position_controller/command"
       subscribers:
         state: "fmu/filter/state"
         status: "fmu/status"
         constants: "fmu/constants"
       services:
         set_mode: "autopilot/change_mode"
-    joint_state_broadcaster:
-      type: joint_state_broadcaster/JointStateBroadcaster
-
-    claw_joint_position_controller:
-      type: position_controllers/JointPositionController
-      joint: claw_joint
-      pid:
-        p: 100.0
-        i: 0.0
-        d: 0.0
-      command_interface: position
