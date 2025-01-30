@@ -4,7 +4,7 @@
   <name>capture</name>
   <version>1.0.0</version>
   <description>Package that launches the entire system</description>
-  <maintainer email="marcelo.jacinto@tecnico.ulisboa.pt">Marcelo Jacinto</maintainer>
+  <maintainer email="luis.g.abrantes@tecnico.ulisboa.pt">Luís Abrantes</maintainer>
   <license>Non-Commercial and Non-Military BSD4 License</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>

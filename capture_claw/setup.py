@@ -20,7 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'extend_claw_py = capture_claw.extend_claw:main'
+            'control_claw_py = capture_claw.control_claw:main'
         ],
     },
 )

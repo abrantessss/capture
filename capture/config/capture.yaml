@@ -119,7 +119,6 @@
         control_attitude: "fmu/in/force/attitude"
         control_attitude_rate: "fmu/in/force/attitude_rate"
         status: "autopilot/status"
-        control_claw_position: "claw_joint_position_controller/command"
       subscribers:
         state: "fmu/filter/state"
         status: "fmu/status"

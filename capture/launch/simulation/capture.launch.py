@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+
 from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
@@ -8,6 +9,7 @@ from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 from launch_ros.actions import Node
+
 
 def generate_launch_description():
     
@@ -70,11 +72,11 @@ def generate_launch_description():
         }.items()
     )
     
-    extend_claw_node = Node(
+    control_claw_node = Node(
         package='capture_claw',        
-        executable='extend_claw_py',   
+        executable='control_claw_py',   
         namespace='drone1',      
-        name='extend_claw_py',         
+        name='control_claw_py',         
         output='screen'
     )
     
@@ -89,5 +91,5 @@ def generate_launch_description():
         drone_params_file_arg,
         mavlink_interface_launch_file,
         autopilot_launch_file,
-        extend_claw_node,
+        control_claw_node,
     ])

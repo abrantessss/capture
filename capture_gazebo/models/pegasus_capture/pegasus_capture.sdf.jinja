@@ -239,8 +239,13 @@
         <use_parent_model_frame>1</use_parent_model_frame>
       </axis>
     </joint>
+
+
+    <!-- CLAW  -->
+
+
     <link name='claw'>
-      <pose>-0.3 0 0.21 0 -1.5708 0</pose>
+      <pose>-0.3 0 0.21 0 -1.571 0</pose>
       <inertial>
         <pose>0 0 -0.30 0 0 0</pose>
         <mass>0.6</mass>
@@ -294,18 +299,173 @@
       <axis>
         <xyz>0 1 0</xyz>
         <limit>
-          <lower>-1e+16</lower>
-          <upper>1e+16</upper>
-          <effort>10.0</effort>
-          <velocity>1.0</velocity>
+          <lower>-1.571</lower>
+          <upper>0</upper>
         </limit>
-        <use_parent_model_frame>1</use_parent_model_frame>
-        <dynamics>
-          <damping>0.1</damping>
-          <friction>0.01</friction>
-        </dynamics>
       </axis>
     </joint>
+    <link name='right_finger'>
+      <pose>-0.7 -0.05 0.21 0 1.571 1.4</pose>
+      <inertial>
+        <pose>0 0 0 0 0 0</pose>
+        <mass>0.01</mass>
+        <inertia>
+          <ixx>0.00015</ixx>
+          <iyy>0.00015</iyy>
+          <izz>0.00015</izz>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name='right_finger_collision1'>
+        <pose>0 -0.005 -0.02 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.12 0.02 0.08</size>
+          </box>
+        </geometry>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <friction>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <collision name='right_finger_collision2'>
+        <pose>0 0.02 -0.10 0.72 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.12 0.02 0.09</size>
+          </box>
+        </geometry>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <friction>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <visual name='right_finger_visual'>
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>model://pegasus_capture/meshes/capture_finger.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Gold</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <gravity>1</gravity>
+        <velocity_decay/>
+    </link>
+    <joint name='right_finger_joint' type='revolute'>
+      <child>right_finger</child>
+      <parent>claw</parent>
+      <pose>0 0 0 0 0 0</pose>
+      <axis>
+        <xyz>1 0 0</xyz>
+        <limit>
+          <lower>0</lower>
+          <upper>1.4</upper>
+        </limit>
+      </axis>
+    </joint>
+    <link name='left_finger'>
+      <pose>-0.7 0.05 0.21 0 1.571 -1.4</pose>
+      <inertial>
+        <pose>0 0 0 0 0 0</pose>
+        <mass>0.01</mass>
+        <inertia>
+          <ixx>0.00015</ixx>
+          <iyy>0.00015</iyy>
+          <izz>0.00015</izz>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name='left_finger_collision1'>
+        <pose>0 0.005 -0.02 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.12 0.02 0.08</size>
+          </box>
+        </geometry>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <friction>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <collision name='left_finger_collision2'>
+        <pose>0 -0.02 -0.10 -0.72 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.12 0.02 0.09</size>
+          </box>
+        </geometry>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <friction>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <visual name='left_finger_visual'>
+          <pose>0 0 0 0 0 3.1416</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>model://pegasus_capture/meshes/capture_finger.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Gold</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <gravity>1</gravity>
+        <velocity_decay/>
+    </link>
+    <joint name='left_finger_joint' type='revolute'>
+      <child>left_finger</child>
+      <parent>claw</parent>
+      <pose>0 0 0 0 0 0</pose>
+      <axis>
+        <xyz>1 0 0</xyz>
+        <limit>
+          <lower>-1.4</lower>
+          <upper>0</upper>
+        </limit>
+      </axis>
+    </joint>
+    <plugin name="gazebo_claw_plugin" filename="libgazebo_claw_plugin.so">
+      <ros>
+        <namespace>/drone1</namespace>
+      </ros>
+    </plugin>
+
+
+    <!-- END OF CLAW  -->
+
+
     <link name='rotor_0'>
       <pose>0.246 -0.248 0.357 0 0 0</pose>
       <inertial>

@@ -25,7 +25,8 @@ install(DIRECTORY include/${PROJECT_NAME}
 
 # Services, messages and actions to generate
 rosidl_generate_interfaces(${PROJECT_NAME}
-  "srv/ExtendClaw.srv"
+  "srv/Claw.srv"
+  "msg/Claw.msg"
 )
 
 ament_export_dependencies(rosidl_default_runtime)

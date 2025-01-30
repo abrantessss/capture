@@ -5,9 +5,10 @@
   <version>1.0.0</version>
   <description>Package that contains all gazebo worlds and vehicle models, based on the original versions provided by PX4</description>
 
-  <maintainer email="marcelo.jacinto@tecnico.ulisboa.pt">Marcelo Jacinto</maintainer>
+  <maintainer email="luis.g.abrantes@tecnico.ulisboa.pt">Luís Abrantes</maintainer>
   <license>BSD 3-Clause License</license>
  
+  <author email="luis.g.abrantes@tecnico.ulisboa.pt">Luís Abrantes</author>
   <author email="marcelo.jacinto@tecnico.ulisboa.pt">Marcelo Jacinto</author>
   <author email="lorenz@px4.io">Lorenz Meier</author>
   <author email="james.goppert@gmail.com">James Goppert</author>
@@ -15,8 +16,18 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
   <buildtool_depend>ament_cmake_python</buildtool_depend>
 
-  <depend>rclcpp</depend>
-  <depend>rclpy</depend>
+  <build_depend>rclcpp</build_depend>
+  <build_depend>capture_msgs</build_depend>
+  <build_depend>gazebo_ros</build_depend>
+  <build_depend>rclpy</build_depend>
+  <build_depend>gazebo_dev</build_depend>
+
+  <exec_depend>rclcpp</exec_depend>
+  <exec_depend>capture_msgs</exec_depend>
+  <exec_depend>gazebo_ros</exec_depend>
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>gazebo_dev</exec_depend>
+
 
   <!-- Packages Dependencies -->
   <test_depend>ament_lint_auto</test_depend>
