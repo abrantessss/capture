@@ -245,9 +245,9 @@
 
 
     <link name='claw'>
-      <pose>-0.3 0 0.21 0 -1.571 0</pose>
+      <pose>0 0 0.22 0 -1.571 0</pose>
       <inertial>
-        <pose>0 0 -0.30 0 0 0</pose>
+        <pose>0 0 0.1 0 0 0</pose>
         <mass>0.6</mass>
         <inertia>
           <ixx>0.033125</ixx>
@@ -259,10 +259,10 @@
         </inertia>
       </inertial>
       <collision name='claw_collision'>
-        <pose>0 0 0 0 0 0</pose>
+        <pose>0 0 0.33 0 0 0</pose>
         <geometry>
           <box>
-            <size>0.125 0.125 0.8</size>
+            <size>0.115 0.115 0.6</size>
           </box>
         </geometry>
         <surface>
@@ -275,11 +275,11 @@
         </surface>
       </collision>
       <visual name='claw_visual'>
-          <pose>0 0 0 0 0 0</pose>
+          <pose>0 0 0.27 0 3.14 0</pose>
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
-              <uri>model://pegasus_capture/meshes/capture_claw.stl</uri>
+              <uri>model://pegasus_capture/meshes/capture_arm.stl</uri>
             </mesh>
           </geometry>
           <material>
@@ -295,7 +295,7 @@
     <joint name='claw_joint' type='revolute'>
       <child>claw</child>
       <parent>base_link</parent>
-      <pose>0 0 -0.30 0 0 0</pose>
+      <pose>0.03 0 0.03 0 0 0</pose>
       <axis>
         <xyz>0 1 0</xyz>
         <limit>
@@ -305,7 +305,7 @@
       </axis>
     </joint>
     <link name='right_finger'>
-      <pose>-0.7 -0.05 0.21 0 1.571 1.4</pose>
+      <pose>-0.645 -0.016 0.22 0 1.571 1.571</pose>
       <inertial>
         <pose>0 0 0 0 0 0</pose>
         <mass>0.01</mass>
@@ -322,7 +322,7 @@
         <pose>0 -0.005 -0.02 0 0 0</pose>
         <geometry>
           <box>
-            <size>0.12 0.02 0.08</size>
+            <size>0.03 0.02 0.08</size>
           </box>
         </geometry>
         <surface>
@@ -338,7 +338,7 @@
         <pose>0 0.02 -0.10 0.72 0 0</pose>
         <geometry>
           <box>
-            <size>0.12 0.02 0.09</size>
+            <size>0.03 0.02 0.09</size>
           </box>
         </geometry>
         <surface>
@@ -351,7 +351,7 @@
         </surface>
       </collision>
       <visual name='right_finger_visual'>
-          <pose>0 0 0 0 0 0</pose>
+          <pose>-0.005 0.018 -0.08 0 0 3.14</pose>
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
@@ -381,7 +381,7 @@
       </axis>
     </joint>
     <link name='left_finger'>
-      <pose>-0.7 0.05 0.21 0 1.571 -1.4</pose>
+      <pose>-0.645 0.016 0.22 0 1.571 -1.571</pose>
       <inertial>
         <pose>0 0 0 0 0 0</pose>
         <mass>0.01</mass>
@@ -398,7 +398,7 @@
         <pose>0 0.005 -0.02 0 0 0</pose>
         <geometry>
           <box>
-            <size>0.12 0.02 0.08</size>
+            <size>0.03 0.02 0.08</size>
           </box>
         </geometry>
         <surface>
@@ -414,7 +414,7 @@
         <pose>0 -0.02 -0.10 -0.72 0 0</pose>
         <geometry>
           <box>
-            <size>0.12 0.02 0.09</size>
+            <size>0.03 0.02 0.09</size>
           </box>
         </geometry>
         <surface>
@@ -427,7 +427,7 @@
         </surface>
       </collision>
       <visual name='left_finger_visual'>
-          <pose>0 0 0 0 0 3.1416</pose>
+          <pose>0.01 -0.018 -0.08 0 0 0</pose>
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
@@ -460,6 +460,12 @@
       <ros>
         <namespace>/drone1</namespace>
       </ros>
+      <extendForce1>0.25</extendForce1>
+      <extendForce2>2</extendForce2>
+      <retractForce1>0.22</retractForce1>
+      <retractForce2>-1.5</retractForce2>
+      <catchForce>0.001</catchForce>
+      <releaseForce>2</releaseForce>
     </plugin>
 
 

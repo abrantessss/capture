@@ -2,6 +2,10 @@
 ## Description
 This repository is part of **Project Capture** ([website](https://capture.isr.tecnico.ulisboa.pt/pt/)) focused on the development of claw control and design of the claw, drone and map for simulations in Gazebo Classic.
 
+<p align="center">
+  <img src="capture_gazebo\models\pegasus_capture\Capture.png" alt="capture_img" width="800"/>
+</p>
+
 ## Running
 To start de simulation in gazebo:
 ```bash

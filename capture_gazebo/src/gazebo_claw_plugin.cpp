@@ -38,8 +38,18 @@ namespace gazebo
     rclcpp::Node::SharedPtr ros_node_;
     rclcpp::Subscription<capture_msgs::msg::Claw>::SharedPtr position_sub_;
 
+    //Claw Angles
     double claw_arm_position_ = 0.0;
-    double claw_fingers_position = 0.0;
+    double claw_fingers_position_ = 0.0;
+
+    //Claw Forces
+    double extendForce1_ = 0.0;
+    double extendForce2_ = 0.0;
+    double retractForce1_ = 0.0;
+    double retractForce2_ = 0.0;
+    double catchForce_ = 0.0;
+    double releaseForce_ = 0.0;
+
 
     std::mutex lock_;
 
@@ -78,6 +88,13 @@ namespace gazebo
       return;
     }
 
+    impl_->extendForce1_ = sdf->GetElement("extendForce1")->Get<double>();
+    impl_->extendForce2_ = sdf->GetElement("extendForce2")->Get<double>();
+    impl_->retractForce1_ = sdf->GetElement("retractForce1")->Get<double>();
+    impl_->retractForce2_ = sdf->GetElement("retractForce2")->Get<double>();
+    impl_->catchForce_ = sdf->GetElement("catchForce")->Get<double>();
+    impl_->releaseForce_ = sdf->GetElement("releaseForce")->Get<double>();
+
     impl_->ros_node_ = gazebo_ros::Node::Get(sdf);
 
     impl_->position_sub_ = impl_->ros_node_->create_subscription<capture_msgs::msg::Claw>(
@@ -94,8 +111,8 @@ namespace gazebo
   {
     std::lock_guard<std::mutex> guard(lock_);
     claw_arm_position_ = msg->arm;
-    claw_fingers_position = msg->fingers;
-    std::cout << "Received arm position: " << claw_arm_position_ << " | fingers position: " << claw_fingers_position << std::endl;
+    claw_fingers_position_ = msg->fingers;
+    std::cout << "Received arm position: " << claw_arm_position_ << " | fingers position: " << claw_fingers_position_ << std::endl;
   }
 
   void GazeboClawPluginPrivate::OnUpdate()
@@ -105,21 +122,21 @@ namespace gazebo
       
       if(claw_arm_position_ >= 0) {
         if (current_arm_pos < claw_arm_position_- 0.2)
-          claw_arm_joint_->SetForce(0, 0.12);
+          claw_arm_joint_->SetForce(0, extendForce1_);
         else
-          claw_arm_joint_->SetForce(0, 1);
+          claw_arm_joint_->SetForce(0, extendForce2_);
       } else {
         if (current_arm_pos > claw_arm_position_+ 0.2)
-          claw_arm_joint_->SetForce(0, 0.08);
+          claw_arm_joint_->SetForce(0, retractForce1_);
         else
-          claw_arm_joint_->SetForce(0, -1);
+          claw_arm_joint_->SetForce(0, retractForce2_);
       }
-      if(claw_fingers_position <= 0) {
-        claw_left_finger_joint_->SetForce(0, 0.001);
-        claw_right_finger_joint_->SetForce(0, -0.001);
+      if(claw_fingers_position_ <= 0) {
+        claw_left_finger_joint_->SetForce(0, catchForce_);
+        claw_right_finger_joint_->SetForce(0, -catchForce_);
       } else {
-        claw_left_finger_joint_->SetForce(0, -2);
-        claw_right_finger_joint_->SetForce(0, 2);
+        claw_left_finger_joint_->SetForce(0, -releaseForce_);
+        claw_right_finger_joint_->SetForce(0, releaseForce_);
       }
       
       
